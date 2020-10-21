@@ -1,0 +1,861 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Improving mappings of StarGAN-VC2 for extreme case cross-lingual voice conversion</title>
+      <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+      <script>
+         function play(path) {{
+           var player = document.getElementById('player');
+           player.src = path;
+           player.play();
+         }}
+      </script>
+
+      </script>
+      <script type="text/javascript">
+      function play(audioElement){
+         audioElement.play();
+         audioElement.parentElement.classList.add("playing");
+
+      }
+
+      function onEnd(audioElement){
+         audioElement.parentElement.classList.remove("playing");
+      }
+      </script>
+      <style type="text/css">
+         table, th, td {
+            border: 1px solid black;
+         }
+         table td,
+         table th
+         {
+         text-align:center;
+         padding: 5px 5px;
+         }
+         .play-btn {
+         padding: 2px 10px;
+         display: inline-block;
+         background-color: rgba(9, 13, 255, 0.212);
+         border-radius: 2px;
+         color: #000;
+         margin: 0px;
+         }
+         .play-btn:hover {
+         background-color: #000;
+         color: #fff;
+         text-decoration: none;
+         }
+         .play-btn.playing{
+         color: #000 !important;
+         background-color: #2aff0ec0;
+         }
+
+         h1 {
+         font-size: 32px;
+         }
+
+         h2 {
+         font-size: 28px;
+         }
+
+         h3 {
+         font-size: 24px;
+         }
+
+         .overflow {
+         text-align: center;
+         color: #fff;
+         background-color: #000;
+         border: solid 1px #000;
+         }
+         .sample-entry {
+         margin-top: 16px;
+         }
+         .highlight {
+         background-color: #FF7F0E;
+         }
+      </style>
+
+   </head>
+   <body>
+     <div class="main">
+       <article>
+         <header>
+            <h1>Improving mappings of StarGAN-VC2 for extreme case cross-lingual voice conversion</h1>
+         </header>
+      </article>
+      <div>
+         <p><b>Authors:</b> Vladimir Gogoryan, Ivan Vovk, Vadim Popov, Tasnima Sadekova, Mikhail Kudinov</p>
+      </div>
+      <div>
+      <p><b>Abstract:</b> We present a modified version of the state-of-art StarGAN-VC2 architecture capable of training robust mappings in cross-lingual mode when each language is represented by only one speaker. A straightforward approach to training cross-lingual mappings with StarGAN-VC2 may result in a very distinctive accent in the synthesized recordings caused by a lack of disentanglement between pronunciation and voice quality in the ground truth recordings. We show that this problem may be overcome by means of adding an extra term to the loss function penalizing the generating network for producing recordings with a strong accent. We show that pronunciation loss leads to improvement in both naturalness and speaker similarity of the synthesized speech in terms of Mean Opinion Score compared to the baseline StarGAN-VC2 model.</a></p>
+      
+      <hr>
+      <h2>1) Inter-gender setup</h2>
+      
+      <table style="margin-left:0;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td><b>Speaker</b></td>
+               <td><b>Notation</b></td>
+               <td><b>Gender</b></td>
+            </tr>
+            <tr>
+               <td style="text-align:left">1. Russian</td>
+               <td>RU</td>
+               <td>male</td>
+            </tr>
+            <tr>
+               <td style="text-align:left">2. French</td>
+               <td>FR</td>
+               <td>male</td>
+            </tr> 
+            <tr>
+               <td style="text-align:left">3. English</td>
+               <td>EN</td>
+               <td>female</td>
+            </tr> 
+            <tr>
+               <td style="text-align:left">4. German</td>
+               <td>GE</td>
+               <td>female</td>
+            </tr>             
+         </tbody>
+      </table>
+      
+      <h3>Conversion from Russian speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_orig.wav"></audio></td>
+                  <td rowspan="3">RU</td>
+                  <td> EN</td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_EN_mel_cepstral.wav"></audio></td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_EN_mel_no_cls.wav"></audio></td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td ><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/1_mixed_RU_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_orig.wav"></audio></td>
+                  <td rowspan="3">RU</td>
+                  <td> EN</td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_EN_mel_cepstral.wav"></audio></td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_EN_mel_no_cls.wav"></audio></td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/2_mixed_RU_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_orig.wav"></audio></td>
+                  <td rowspan="3">RU</td>
+                  <td> EN</td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_EN_mel_cepstral.wav"></audio></td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_EN_mel_no_cls.wav"></audio></td>
+                  <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/RU/3_mixed_RU_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+         </tbody>
+      </table>
+
+      <h3>Conversion from English speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_orig.wav"></audio></td>
+               <td rowspan="3">EN</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td ><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/1_mixed_EN_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_orig.wav"></audio></td>
+               <td rowspan="3">EN</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/2_mixed_EN_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_orig.wav"></audio></td>
+               <td rowspan="3">EN</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/EN/3_mixed_EN_to_FR_mel_with_cls.wav"></audio></td>
+            </tr> 
+         </tbody>
+      </table>
+
+      <h3>Conversion from German speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_orig.wav"></audio></td>
+               <td rowspan="3">GE</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td ><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/1_mixed_GE_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_orig.wav"></audio></td>
+               <td rowspan="3">GE</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/2_mixed_GE_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_orig.wav"></audio></td>
+               <td rowspan="3">GE</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/GE/3_mixed_GE_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>   
+         </tbody>
+      </table>
+
+      <h3>Conversion from French speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_orig.wav"></audio></td>
+               <td rowspan="3">FR</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>GE</td>
+               <td ><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/1_mixed_FR_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_orig.wav"></audio></td>
+               <td rowspan="3">FR</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>GE</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/2_mixed_FR_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_orig.wav"></audio></td>
+               <td rowspan="3">FR</td>
+               <td>RU</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_RU_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_RU_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_RU_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>GE</td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/mixed/FR/3_mixed_FR_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>  
+         </tbody>
+      </table>
+
+      <br><hr><br>
+      <h2>2) Intra-gender setup</h2>
+      
+      <table style="margin-left:0;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td><b>Speaker</b></td>
+               <td><b>Notation</b></td>
+               <td><b>Gender</b></td>
+            </tr>
+            <tr>
+               <td style="text-align:left">1. English</td>
+               <td>EN</td>
+               <td>female</td>
+            </tr>
+            <tr>
+               <td style="text-align:left">2. German</td>
+               <td>GE</td>
+               <td>female</td>
+            </tr> 
+            <tr>
+               <td style="text-align:left">3. Spanish</td>
+               <td>ES</td>
+               <td>female</td>
+            </tr> 
+            <tr>
+               <td style="text-align:left">4. French</td>
+               <td>FR</td>
+               <td>female</td>
+            </tr>             
+         </tbody>
+      </table>
+
+      <h3>Conversion from English speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/EN/1_female_EN_orig.wav"></audio></td>
+               <td rowspan="3">EN</td>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_GE_mel_with_cls.wav"></audio></td>
+                  
+            </tr>
+            <tr>
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td ><audio controls=""><source src="wavs/female/EN/1_female_EN_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/1_female_EN_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/EN/2_female_EN_orig.wav"></audio></td>
+               <td rowspan="3">EN</td>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/2_female_EN_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/EN/3_female_EN_orig.wav"></audio></td>
+               <td rowspan="3">EN</td>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/EN/3_female_EN_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+         </tbody>
+      </table>
+
+      <h3>Conversion from German speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/GE/1_female_GE_orig.wav"></audio></td>
+               <td rowspan="3">GE</td>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td ><audio controls=""><source src="wavs/female/GE/1_female_GE_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/1_female_GE_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/GE/2_female_GE_orig.wav"></audio></td>
+               <td rowspan="3">GE</td>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/2_female_GE_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/GE/3_female_GE_orig.wav"></audio></td>
+               <td rowspan="3">GE</td>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/GE/3_female_GE_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+         </tbody>
+      </table>
+
+      <h3>Conversion from Spanish speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/ES/1_female_ES_orig.wav"></audio></td>
+               <td rowspan="3">ES</td>
+               <td> EN</td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td ><audio controls=""><source src="wavs/female/ES/1_female_ES_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/1_female_ES_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/ES/2_female_ES_orig.wav"></audio></td>
+               <td rowspan="3">ES</td>
+               <td> EN</td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/2_female_ES_to_FR_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/ES/3_female_ES_orig.wav"></audio></td>
+               <td rowspan="3">ES</td>
+               <td> EN</td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td >GE</td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>FR</td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_FR_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_FR_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/ES/3_female_ES_to_FR_mel_with_cls.wav"></audio></td>
+            </tr> 
+         </tbody>
+      </table>
+
+      <h3>Conversion from French speaker:</h3>
+      <br>
+
+      <table style="margin-left:auto;margin-right:auto;">
+         <tbody>
+            <tr>
+               <td rowspan="3"><b>Reference</b></td>
+               <td rowspan="3"><b>Source speaker</b></td>
+               <td rowspan="3"><b>Target speaker</b></td>
+               <td colspan="3"><b>Model</b></td>
+            </tr>
+            <tr>
+               <td rowspan="2"><b>mfcc</b></td>
+               <td colspan="2"><b>mel</b> </td>
+            </tr>
+            <tr>
+               <td><i>w/o cls</i> </td>
+               <td><i>w/ cls</i> </td>
+            </tr>
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/FR/1_female_FR_orig.wav"></audio></td>
+               <td rowspan="3">FR</td>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>GE</td>
+               <td ><audio controls=""><source src="wavs/female/FR/1_female_FR_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/1_female_FR_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/FR/2_female_FR_orig.wav"></audio></td>
+               <td rowspan="3">FR</td>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>GE</td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/2_female_FR_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>
+
+            <tr>
+               <td rowspan="3" ><audio controls=""><source src="wavs/female/FR/3_female_FR_orig.wav"></audio></td>
+               <td rowspan="3">FR</td>
+               <td >EN</td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_EN_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_EN_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_EN_mel_with_cls.wav"></audio></td>
+            </tr>
+            <tr>
+               <td>ES</td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_ES_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_ES_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_ES_mel_with_cls.wav"></audio></td>
+            </tr>
+            
+            <tr> 
+               <td>GE</td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_GE_mel_cepstral.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_GE_mel_no_cls.wav"></audio></td>
+               <td><audio controls=""><source src="wavs/female/FR/3_female_FR_to_GE_mel_with_cls.wav"></audio></td>
+            </tr>  
+         </tbody>
+      </table>
+
+     </div>
+   </body>
+</html>
